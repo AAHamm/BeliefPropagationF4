@@ -14,6 +14,7 @@ public class Main {
 
         String option1 = sc.nextLine();
 
+
         if(option1.equals("default")){
             DiscriminativeDecoder d = new DiscriminativeDecoder();
 
@@ -25,10 +26,11 @@ public class Main {
         }
 
         if(option1.equals("alternative")){
+            String inputWord = sc.nextLine();
 
             ADecoder decoder = new ADecoder();
 
-            decoder.initConfidentCodeWord("w11");
+            decoder.initConfidentCodeWord(inputWord);
            // decoder.initConfidentZeroCodeWord();
 
             decoder.flood(50);
@@ -133,13 +135,15 @@ public class Main {
         }
 
         if(option1.equals("lcc")){
+            String inputWord = sc.nextLine();
             int[][] matrix = MatrixReader.readAdjMatrix();
             LCDecoder decoder= new LCDecoder(matrix);
 
-            decoder.initConfidentCodeWord("w11");
+
+            decoder.initConfidentCodeWord(inputWord);
 
             decoder.LC(0);
-            decoder.flood(5);
+            decoder.flood(50);
             ArrayList<BeliefVector> m = decoder.LCmarginals(0);
 
 
@@ -162,6 +166,12 @@ public class Main {
                 out+= "\n";
             }
             System.out.println(out);
+
+            System.out.println(decoder.printNeighbourHood());
+
+            System.out.print(decoder.printAdjMat());
+
+            System.out.println(decoder.printMessages(0));
         }
     }
 }

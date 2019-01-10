@@ -69,6 +69,25 @@ public class LCDecoder {
 
         ArrayList<BeliefVector> m = marginals();
 
+        double one = m.get(lcNode).get(1);
+        double omegaSq = m.get(lcNode).get(3);
+        m.set(lcNode, new BeliefVector(m.get(lcNode).get(0), omegaSq, m.get(lcNode).get(2), one));
+
+        for (int i = 0; i < node.neighbours.size() ; i++) {
+
+        }
+
+        for (LCNode n: node.neighbours) {
+            int id = n.getId();
+
+            double omega = m.get(id).get(2);
+            double omega2 = m.get(id).get(3);
+            m.set(id, new BeliefVector(m.get(id).get(0), m.get(id).get(1), omega2, omega));
+        }
+
+        //Flip values back
+
+        /*
         double one = node.beliefs.get(1);
         double omegaSQ = node.beliefs.get(3);
         m.set(lcNode, new BeliefVector(node.beliefs.get(0), omegaSQ , node.beliefs.get(2), one));
@@ -81,6 +100,7 @@ public class LCDecoder {
             node.neighbours.get(i).setBeliefs(new BeliefVector(node.neighbours.get(i).beliefs.get(0),  node.neighbours.get(i).beliefs.get(1), omega2, omega));
 
         }
+        */
 
         return m;
     }
@@ -162,7 +182,7 @@ public class LCDecoder {
             else if(word.charAt(i) == 'w'){
                 nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.7, 0.1));
             }
-            else  if(word.charAt(i) == 'x'){
+            else  if(word.charAt(i) == 'x'){//TODO
                 nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.1, 0.7));
             }
         }
@@ -269,6 +289,31 @@ public class LCDecoder {
             n+="\n";
         }
         return n;
+    }
+
+    public String printAdjMat(){
+        String s = "";
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            for (int j = 0; j < adjacencyMatrix[0].length; j++) {
+                s+=adjacencyMatrix[i][j];
+            }
+            s+='\n';
+        }
+        return s;
+    }
+
+    public String printMessages(int node){
+        LCNode n = nodes.get(node);
+
+        String s = "";
+
+        for (int i = 0; i < n.messages.size(); i++) {
+            s += n.messages.get(i).toString();
+            s += '\n';
+        }
+
+        return s;
+
     }
 
     public int size(){
