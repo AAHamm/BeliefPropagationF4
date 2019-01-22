@@ -5,6 +5,7 @@ import Structures.BeliefVector;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 
 public class LCDecoder {
     ArrayList<LCNode> nodes = new ArrayList<LCNode>();
@@ -186,6 +187,40 @@ public class LCDecoder {
                 nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.1, 0.7));
             }
         }
+    }
+
+    public void initErrorZeroCodeword(String word){
+
+        int errorIndex = 0;
+
+        for (int i = 0; i < word.length(); i++) {
+            if(i==errorIndex){
+                if(word.charAt(i) == '0'){
+                    nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.7, 0.1, 0.1));
+                }
+                else if(word.charAt(i) == '1'){
+                    nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.7, 0.1));
+                }
+                else if(word.charAt(i) == 'w'){
+                    nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.1, 0.7));
+                }
+                else  if(word.charAt(i) == 'x'){//TODO
+                    nodes.get(i).setBeliefs(new BeliefVector(0.7, 0.1, 0.1, 0.1));
+                }
+            }
+            else {
+                if (word.charAt(i) == '0') {
+                    nodes.get(i).setBeliefs(new BeliefVector(0.7, 0.1, 0.1, 0.1));
+                } else if (word.charAt(i) == '1') {
+                    nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.7, 0.1, 0.1));
+                } else if (word.charAt(i) == 'w') {
+                    nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.7, 0.1));
+                } else if (word.charAt(i) == 'x') {//TODO
+                    nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.1, 0.7));
+                }
+            }
+        }
+
     }
 
     public void initAWGNWord(String word){

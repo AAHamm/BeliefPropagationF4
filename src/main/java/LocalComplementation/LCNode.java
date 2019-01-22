@@ -113,7 +113,7 @@ public class LCNode {
         return m;
     }
 
-    public BeliefVector getBeliefs() {
+    public BeliefVector getBeliefs() {      
         return beliefs;
     }
 }
