@@ -4,6 +4,7 @@ import LocalComplementation.LCDecoder;
 import NonDiscriminative.ADecoder;
 import Structures.*;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -136,17 +137,20 @@ public class Main {
 
         if(option1.equals("lcc")){
             String inputWord = sc.nextLine();
+            int lcNode = Integer.parseInt(sc.nextLine());
+
             int[][] matrix = MatrixReader.readAdjMatrix();
             LCDecoder decoder= new LCDecoder(matrix);
 
 
             decoder.initConfidentCodeWord(inputWord);
 
-            decoder.LC(0);
+            decoder.LC(lcNode);
             decoder.flood(50);
-            ArrayList<BeliefVector> m = decoder.LCmarginals(0);
+            ArrayList<BeliefVector> m = decoder.LCmarginals(lcNode);
 
-
+            System.out.println(decoder.StringMarginals(lcNode));
+            /*
             String out = "";
             for (int i = 0; i < m.size(); i++) {
                 out+= "x" + i + ": (" + m.get(i).get(0) + ", " + m.get(i).get(1) + ", " + m.get(i).get(2) + ", " + m.get(i).get(3) + ")";
@@ -166,12 +170,95 @@ public class Main {
                 out+= "\n";
             }
             System.out.println(out);
+            */
 
             System.out.println(decoder.printNeighbourHood());
 
             System.out.print(decoder.printAdjMat());
 
             System.out.println(decoder.printMessages(0));
+        }
+
+        if(option1.equals("lccerr")){
+
+            String inputWord = sc.nextLine();
+            int[][] matrix = MatrixReader.readAdjMatrix();
+            LCDecoder decoder= new LCDecoder(matrix);
+
+
+            decoder.initErrorZeroCodeword(inputWord);
+
+            decoder.LC(0);
+            decoder.flood(50);
+            ArrayList<BeliefVector> m = decoder.LCmarginals(0);
+
+
+            System.out.println(decoder.StringMarginals(0));
+            /*
+            String out = "";
+            for (int i = 0; i < m.size(); i++) {
+                out+= "x" + i + ": (" + m.get(i).get(0) + ", " + m.get(i).get(1) + ", " + m.get(i).get(2) + ", " + m.get(i).get(3) + ")";
+                if(m.get(i).greatestValue() == 0){
+                    out+= ", decoded to: 0";
+                }
+                if(m.get(i).greatestValue() == 1){
+                    out+= ", decoded to: 1";
+                }
+                if(m.get(i).greatestValue() == 2){
+                    out+= ", decoded to: w";
+                }
+                if(m.get(i).greatestValue() == 3){
+                    out+= ", decoded to: w^2";
+                }
+
+                out+= "\n";
+
+            }
+            System.out.println(out);
+
+            */
+        }
+
+        if(option1.equals("jointlc")){
+
+            String inputWord = sc.nextLine();
+            int[][] matrix = MatrixReader.readAdjMatrix();
+
+            ADecoder NDD = new ADecoder(matrix.clone());
+            NDD.initConfidentCodeWord(inputWord);
+            NDD.flood(50);
+
+            ArrayList<BeliefVector> NDDResult = NDD.marginals(); //Results without doing any LC.
+
+            System.out.println("Normal Computation");
+            System.out.println(NDD.StringMarginals());
+
+            ArrayList<ArrayList<BeliefVector>> LCDResults = new ArrayList<ArrayList<BeliefVector>>();
+
+            for (int i = 0; i < inputWord.length(); i++) {
+
+                int[][] newMat = new int[matrix.length][matrix.length];
+                for (int j = 0; j < matrix.length; j++) {
+                    for (int k = 0; k < matrix.length; k++) {
+                        newMat[j][k] = matrix[j][k];
+                    }
+                }
+
+                LCDecoder LCD = new LCDecoder(newMat);
+                LCD.initConfidentCodeWord(inputWord);
+                LCD.LC(i);
+                LCD.flood(50);
+
+                System.out.println("LC on node: " + i);
+                System.out.println(LCD.StringMarginals(i));
+
+                ArrayList<BeliefVector> m = LCD.LCmarginals(i);
+                LCDResults.add(m);
+
+            }
+
+
+
         }
     }
 }

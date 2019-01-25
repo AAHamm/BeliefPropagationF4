@@ -28,6 +28,8 @@ public class LCDecoder {
             }
         }
 
+
+
         this.adjacencyMatrix = adjacencyMatrix;
 
     }
@@ -74,9 +76,6 @@ public class LCDecoder {
         double omegaSq = m.get(lcNode).get(3);
         m.set(lcNode, new BeliefVector(m.get(lcNode).get(0), omegaSq, m.get(lcNode).get(2), one));
 
-        for (int i = 0; i < node.neighbours.size() ; i++) {
-
-        }
 
         for (LCNode n: node.neighbours) {
             int id = n.getId();
@@ -287,29 +286,33 @@ public class LCDecoder {
         }
     }
 
-    public String StringMarginals(){
-        ArrayList<BeliefVector> m = marginals();
+    public String StringMarginals(int lcNode){
+
+        ArrayList<BeliefVector> m = LCmarginals(lcNode);
+
 
         String out = "";
-        for (int i = 0; i < m.size(); i++) {
-            out+= "x" + i + ": (" + m.get(i).get(0) + ", " + m.get(i).get(1) + ", " + m.get(i).get(2) + ", " + m.get(i).get(3) + ")";
-            if(m.get(i).greatestValue() == 0){
+
+        for (int j = 0; j < m.size(); j++) {
+            out+= "x" + j + ": (" + m.get(j).get(0) + ", " + m.get(j).get(1) + ", " + m.get(j).get(2) + ", " + m.get(j).get(3) + ")";
+            if(m.get(j).greatestValue() == 0){
                 out+= ", decoded to: 0";
             }
-            if(m.get(i).greatestValue() == 1){
+            if(m.get(j).greatestValue() == 1){
                 out+= ", decoded to: 1";
             }
-            if(m.get(i).greatestValue() == 2){
+            if(m.get(j).greatestValue() == 2){
                 out+= ", decoded to: w";
             }
-            if(m.get(i).greatestValue() == 3){
+            if(m.get(j).greatestValue() == 3){
                 out+= ", decoded to: w^2";
             }
 
             out+= "\n";
-        }
-        return out;
 
+        }
+
+        return out;
     }
 
     public String printNeighbourHood(){
