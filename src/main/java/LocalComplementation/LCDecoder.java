@@ -188,12 +188,12 @@ public class LCDecoder {
         }
     }
 
-    public void initErrorZeroCodeword(String word){
+    public void initErrorCodeword(String word, int errors){
 
-        int errorIndex = 0;
+        int modValue = word.length()/errors;
 
         for (int i = 0; i < word.length(); i++) {
-            if(i==errorIndex){
+            if(i % modValue == 0){
                 if(word.charAt(i) == '0'){
                     nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.7, 0.1, 0.1));
                 }
@@ -220,6 +220,27 @@ public class LCDecoder {
             }
         }
 
+    }
+
+    public void initUncertantyCodeword(String word, int errors){
+        int modValue = word.length()/errors;
+
+        for (int i = 0; i < word.length(); i++) {
+            if(i % modValue == 0){
+                nodes.get(i).setBeliefs(new BeliefVector(0.25, 0.25, 0.25, 0.25));
+            }
+            else {
+                if (word.charAt(i) == '0') {
+                    nodes.get(i).setBeliefs(new BeliefVector(0.7, 0.1, 0.1, 0.1));
+                } else if (word.charAt(i) == '1') {
+                    nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.7, 0.1, 0.1));
+                } else if (word.charAt(i) == 'w') {
+                    nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.7, 0.1));
+                } else if (word.charAt(i) == 'x') {//TODO
+                    nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.1, 0.7));
+                }
+            }
+        }
     }
 
     public void initAWGNWord(String word){

@@ -4,7 +4,6 @@ import LocalComplementation.LCDecoder;
 import NonDiscriminative.ADecoder;
 import Structures.*;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -186,7 +185,7 @@ public class Main {
             LCDecoder decoder= new LCDecoder(matrix);
 
 
-            decoder.initErrorZeroCodeword(inputWord);
+            decoder.initErrorCodeword(inputWord, 1);
 
             decoder.LC(0);
             decoder.flood(50);
@@ -225,7 +224,7 @@ public class Main {
             int[][] matrix = MatrixReader.readAdjMatrix();
 
             ADecoder NDD = new ADecoder(matrix.clone());
-            NDD.initConfidentCodeWord(inputWord);
+            NDD.initErrorCodeword(inputWord, 2);
             NDD.flood(50);
 
             ArrayList<BeliefVector> NDDResult = NDD.marginals(); //Results without doing any LC.
@@ -245,7 +244,7 @@ public class Main {
                 }
 
                 LCDecoder LCD = new LCDecoder(newMat);
-                LCD.initConfidentCodeWord(inputWord);
+                LCD.initErrorCodeword(inputWord, 2);
                 LCD.LC(i);
                 LCD.flood(50);
 
@@ -254,6 +253,30 @@ public class Main {
 
                 ArrayList<BeliefVector> m = LCD.LCmarginals(i);
                 LCDResults.add(m);
+
+            }
+
+            ArrayList<BeliefVector> jointlc = new ArrayList<BeliefVector>();
+            for (int i = 0; i < matrix.length; i++) { //one beliefvector per node
+                jointlc.add(new BeliefVector());
+            }
+
+
+            for (int i = 0; i < LCDResults.size(); i++) {
+
+                for (int j = 0; j < LCDResults.get(0).size(); j++) {
+                    BeliefVector ans = jointlc.get(j);
+                    BeliefVector LCiterationAns = LCDResults.get(i).get(j);
+
+                    ans = BeliefVector.dot(ans, LCiterationAns);
+
+                    ans.normalize();
+                    jointlc.set(j, ans);
+                }
+            }
+
+            for (BeliefVector v: jointlc) {
+                System.out.println(v.toString());
 
             }
 
