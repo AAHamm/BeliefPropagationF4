@@ -113,6 +113,11 @@ public class LCNode {
         return m;
     }
 
+    public void marginalsToBeliefs(){
+        beliefs = marginal();
+        clear();
+    }
+
     public BeliefVector getBeliefs() {      
         return beliefs;
     }

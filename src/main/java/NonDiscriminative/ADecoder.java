@@ -168,9 +168,11 @@ public class ADecoder {
 
     public void initErrorCodeword(String word, int errors){
         int modValue = word.length()/errors;
+        int errorCounter = 0;
 
         for (int i = 0; i < word.length(); i++) {
-            if(i % modValue == 0){
+            if(i % modValue == 0 && errorCounter < errors){
+                errorCounter++;
                 if(word.charAt(i) == '0'){
                     nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.7, 0.1, 0.1));
                 }
@@ -200,9 +202,11 @@ public class ADecoder {
 
     public void initUncertantyCodeWord(String word, int errors){
         int modValue = word.length()/errors;
+        int errorCounter = 0;
 
         for (int i = 0; i < word.length(); i++) {
-            if(i % modValue == 0){
+            if(i % modValue == 0 && errorCounter < errors){
+                errors++;
                 nodes.get(i).setBeliefs(new BeliefVector(0.25, 0.25, 0.25, 0.25));
             }
             else {

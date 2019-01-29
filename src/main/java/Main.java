@@ -10,7 +10,32 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
+
+        int amtLines = Integer.parseInt(sc.nextLine());
+        int[][] adjacencyMatrix = new int[amtLines][amtLines];
+        for (int j = 0; j < amtLines; j++) {
+
+
+            String a = sc.nextLine();
+
+            for (int i = 0; i < a.length(); i++) {
+                if(a.charAt(i) == '0'){
+                    adjacencyMatrix[j][i] = 0;
+                }
+                else if(a.charAt(i) == '1'){
+                    adjacencyMatrix[j][i] = 1;
+                }
+                else if(a.charAt(i) == 'w'){
+                    adjacencyMatrix[j][i] = 2;
+                }
+                else if(a.charAt(i) == '3'){// <------------------------- DANGER STRANGER
+                    adjacencyMatrix[j][i] = 3;
+                }
+            }
+        }
+
 
         String option1 = sc.nextLine();
 
@@ -68,7 +93,7 @@ public class Main {
 
         if(option1.equals("avgDeltaProbReadable")){//Get human readable difference in marginals per node, per flooding.
 
-            int[][] matrix = MatrixReader.readAdjMatrix();
+            int[][] matrix = adjacencyMatrix;
 
             DiscriminativeDecoder decoder = new DiscriminativeDecoder(matrix);
 
@@ -88,7 +113,7 @@ public class Main {
 
         if(option1.equals("avgDeltaProbM")){
 
-            int[][] matrix = MatrixReader.readAdjMatrix();
+            int[][] matrix = adjacencyMatrix;
 
             DiscriminativeDecoder decoder = new DiscriminativeDecoder(matrix);
 
@@ -121,7 +146,7 @@ public class Main {
         }
 
         if(option1.equals("lc")){
-            int[][] matrix = MatrixReader.readAdjMatrix();
+            int[][] matrix = adjacencyMatrix;
             LCDecoder decoder= new LCDecoder(matrix);
 
             decoder.initConfidentCodeWord("w111");
@@ -138,7 +163,7 @@ public class Main {
             String inputWord = sc.nextLine();
             int lcNode = Integer.parseInt(sc.nextLine());
 
-            int[][] matrix = MatrixReader.readAdjMatrix();
+            int[][] matrix = adjacencyMatrix;
             LCDecoder decoder= new LCDecoder(matrix);
 
 
@@ -181,7 +206,7 @@ public class Main {
         if(option1.equals("lccerr")){
 
             String inputWord = sc.nextLine();
-            int[][] matrix = MatrixReader.readAdjMatrix();
+            int[][] matrix = adjacencyMatrix;
             LCDecoder decoder= new LCDecoder(matrix);
 
 
@@ -221,7 +246,7 @@ public class Main {
         if(option1.equals("jointlc")){
 
             String inputWord = sc.nextLine();
-            int[][] matrix = MatrixReader.readAdjMatrix();
+            int[][] matrix = adjacencyMatrix;
 
             ADecoder NDD = new ADecoder(matrix.clone());
             NDD.initErrorCodeword(inputWord, 2);
@@ -282,6 +307,29 @@ public class Main {
 
 
 
+        }
+
+        if(option1.equals("roundlc")){
+            String inputWord = sc.nextLine();
+
+            int[][] matrix = adjacencyMatrix;
+            LCDecoder decoder= new LCDecoder(matrix);
+
+            decoder.initUncertantyCodeword(inputWord, 5);
+
+            ArrayList<BeliefVector> m = decoder.marginals();
+            /*
+            for (BeliefVector b: m) {
+                System.out.println(F4.fromIndex(b.greatestValue()) + ": " +b.toString());
+            }
+            */
+
+            decoder.RoundLCflood(20, 15);
+             m = decoder.marginals();
+
+            for (BeliefVector b: m) {
+                System.out.println(F4.fromIndex(b.greatestValue()) + ": " +b.toString());
+            }
         }
     }
 }
