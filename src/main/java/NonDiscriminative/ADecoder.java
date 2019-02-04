@@ -223,35 +223,35 @@ public class ADecoder {
         }
     }
 
-    public void initAWGNWord(String word){
+    public void initAWGNWord(String word, double E_b, double N_0){
         for (int i = 0; i < word.length(); i++) {
             if(word.charAt(i) == '0'){
-                double[] fst = AWGN.probability(0,0.5, 10.0, 5.0);
-                double[] snd = AWGN.probability(0,0.5, 10.0, 5.0);
+                double[] fst = AWGN.probability(0,0.5, E_b, N_0);
+                double[] snd = AWGN.probability(0,0.5, E_b, N_0);
 
                 BeliefVector v = new BeliefVector(fst[0] + snd[0], fst[0] + snd[1], fst[1] + snd[0], fst[1] + snd[1]);
                 v.normalize();
                 nodes.get(i).setBeliefs(v);
             }
             else if(word.charAt(i) == '1'){
-                double[] fst = AWGN.probability(0,0.5, 10.0, 5.0);
-                double[] snd = AWGN.probability(1,0.5, 10.0, 5.0);
+                double[] fst = AWGN.probability(0,0.5, E_b, N_0);
+                double[] snd = AWGN.probability(1,0.5, E_b, N_0);
 
                 BeliefVector v = new BeliefVector(fst[0] + snd[0], fst[0] + snd[1], fst[1] + snd[0], fst[1] + snd[1]);
                 v.normalize();
                 nodes.get(i).setBeliefs(v);
             }
             else if(word.charAt(i) == 'w'){
-                double[] fst = AWGN.probability(1,0.5, 10.0, 5.0);
-                double[] snd = AWGN.probability(0,0.5, 10.0, 5.0);
+                double[] fst = AWGN.probability(1,0.5, E_b, N_0);
+                double[] snd = AWGN.probability(0,0.5, E_b, N_0);
 
                 BeliefVector v = new BeliefVector(fst[0] + snd[0], fst[0] + snd[1], fst[1] + snd[0], fst[1] + snd[1]);
                 v.normalize();
                 nodes.get(i).setBeliefs(v);
             }
             else  if(word.charAt(i) == 'x'){
-                double[] fst = AWGN.probability(1,0.5, 10.0, 5.0);
-                double[] snd = AWGN.probability(1,0.5, 10.0, 5.0);
+                double[] fst = AWGN.probability(1,0.5, E_b, N_0);
+                double[] snd = AWGN.probability(1,0.5, E_b, N_0);
 
                 BeliefVector v = new BeliefVector(fst[0] + snd[0], fst[0] + snd[1], fst[1] + snd[0], fst[1] + snd[1]);
                 v.normalize();
@@ -309,6 +309,29 @@ public class ADecoder {
             out+= "\n";
         }
         return out;
+
+    }
+
+    public String decodedWord(){
+        String word = "";
+
+        ArrayList<BeliefVector> m = marginals();
+
+        for (int i = 0; i < m.size(); i++) {
+            if(m.get(i).greatestValue() == 0){
+                word += "0";
+            }
+            if(m.get(i).greatestValue() == 1){
+                word+= "1";
+            }
+            if(m.get(i).greatestValue() == 2){
+                word+= "w";
+            }
+            if(m.get(i).greatestValue() == 3){
+                word+= "x";
+            }
+        }
+        return word;
 
     }
 

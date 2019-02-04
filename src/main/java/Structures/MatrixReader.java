@@ -31,4 +31,18 @@ public class MatrixReader {
 
         return adjacencyMatrix;
     }
+
+    public static void checkSymetric(int[][] matrix){
+        boolean error = false;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                if(matrix[i][j] != matrix[j][i]) {
+                    System.out.println("indexes not symetrical: " + i + ", " + j);
+                    error = true;
+                }
+            }
+        }
+        if(!error)
+            System.out.println("Matrix is Symmetric");
+    }
 }
