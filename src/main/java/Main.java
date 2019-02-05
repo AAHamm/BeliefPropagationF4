@@ -347,7 +347,9 @@ public class Main {
 
             int decodings = 200;
 
-            for (int noise = 1; noise < 20; noise++) {
+            System.out.println("BitEnergy/Noise; No-LC bit error rate; No-LC word error rate; LC bit error rate; LC word error rate;");
+
+            for (int noise = 1; noise < 30; noise++) {
 
                 N_0 = noise;
 
@@ -400,7 +402,7 @@ public class Main {
 
                     lcDecoder.initAWGNWord(inputWord, E_b, N_0);
 
-                    lcDecoder.RoundLCflood(5, 50);
+                    lcDecoder.RoundLCflood(10, 30);
 
                     biterror = WordCompare.compare(inputWord, lcDecoder.decodedWord());
 
@@ -412,6 +414,8 @@ public class Main {
                 }
 
                 String dataPoints = "";
+
+
 
                 if(nonLCBitError == 0) {
                     dataPoints += 10 * Math.log10(E_b / N_0) + "; " + 0 + "; " + 0 + ";";
