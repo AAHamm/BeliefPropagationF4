@@ -431,6 +431,12 @@ public class LCDecoder {
 
     }
 
+    public void setBeliefs(BeliefVector[] beliefs){
+        for (int i = 0; i < nodes.size(); i++) {
+            nodes.get(i).setBeliefs(beliefs[i].copy());
+        }
+    }
+
     public int size(){
         return nodes.size();
     }

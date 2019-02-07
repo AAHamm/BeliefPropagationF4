@@ -138,4 +138,8 @@ public class BeliefVector {
             belief[i] = belief[i]/sum;
         }
     }
+
+    public BeliefVector copy(){
+        return new BeliefVector(belief[0], belief[1], belief[2], belief[3]);
+    }
 }

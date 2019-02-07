@@ -1,5 +1,7 @@
 package Noise;
 
+import Structures.BeliefVector;
+
 import java.util.Random;
 
 public class AWGN {
@@ -61,5 +63,48 @@ public class AWGN {
         probs[0] = 1 - probs[1];
 
         return probs;
+    }
+
+    public static BeliefVector[] awgnWord(String word, double E_b, double N_0){
+
+        BeliefVector[] probabilities = new BeliefVector[word.length()];
+
+        for (int i = 0; i < word.length(); i++) {
+            if(word.charAt(i) == '0'){
+                double[] fst = AWGN.probability(0,0.5, E_b, N_0);
+                double[] snd = AWGN.probability(0,0.5, E_b, N_0);
+
+                BeliefVector v = new BeliefVector(fst[0] + snd[0], fst[0] + snd[1], fst[1] + snd[0], fst[1] + snd[1]);
+                v.normalize();
+
+                probabilities[i] = v;
+
+            }
+            else if(word.charAt(i) == '1'){
+                double[] fst = AWGN.probability(0,0.5, E_b, N_0);
+                double[] snd = AWGN.probability(1,0.5, E_b, N_0);
+
+                BeliefVector v = new BeliefVector(fst[0] + snd[0], fst[0] + snd[1], fst[1] + snd[0], fst[1] + snd[1]);
+                v.normalize();
+                probabilities[i] = v;
+            }
+            else if(word.charAt(i) == 'w'){
+                double[] fst = AWGN.probability(1,0.5, E_b, N_0);
+                double[] snd = AWGN.probability(0,0.5, E_b, N_0);
+
+                BeliefVector v = new BeliefVector(fst[0] + snd[0], fst[0] + snd[1], fst[1] + snd[0], fst[1] + snd[1]);
+                v.normalize();
+                probabilities[i] = v;
+            }
+            else  if(word.charAt(i) == 'x'){
+                double[] fst = AWGN.probability(1,0.5, E_b, N_0);
+                double[] snd = AWGN.probability(1,0.5, E_b, N_0);
+
+                BeliefVector v = new BeliefVector(fst[0] + snd[0], fst[0] + snd[1], fst[1] + snd[0], fst[1] + snd[1]);
+                v.normalize();
+                probabilities[i] = v;
+            }
+        }
+        return probabilities;
     }
 }

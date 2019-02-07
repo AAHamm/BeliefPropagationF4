@@ -338,4 +338,10 @@ public class ADecoder {
     public int size(){
         return nodes.size();
     }
+
+    public void setBeliefs(BeliefVector[] beliefs){
+        for (int i = 0; i < nodes.size(); i++) {
+            nodes.get(i).setBeliefs(beliefs[i].copy());
+        }
+    }
 }

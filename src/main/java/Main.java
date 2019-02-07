@@ -1,6 +1,7 @@
 import Discriminative.DiscriminativeDecoder;
 import GlobalFunction.GlobalFunctionDecoder;
 import LocalComplementation.LCDecoder;
+import Noise.AWGN;
 import Noise.WordCompare;
 import NonDiscriminative.ADecoder;
 import Structures.*;
@@ -367,6 +368,8 @@ public class Main {
                     words++;
                     bits+= inputWord.length();
 
+                    BeliefVector[] awgn = AWGN.awgnWord(inputWord, E_b, N_0);
+
                     //Non-LC
 
                     int[][] newMat = new int[matrix.length][matrix.length];
@@ -378,7 +381,7 @@ public class Main {
 
                     ADecoder nonLCDecoder = new ADecoder(newMat);
 
-                    nonLCDecoder.initAWGNWord(inputWord, E_b, N_0);
+                    nonLCDecoder.setBeliefs(awgn);
 
                     nonLCDecoder.flood(50);
 
@@ -400,7 +403,7 @@ public class Main {
 
                     LCDecoder lcDecoder = new LCDecoder(newLCmat);
 
-                    lcDecoder.initAWGNWord(inputWord, E_b, N_0);
+                    lcDecoder.setBeliefs(awgn);
 
                     lcDecoder.RoundLCflood(10, 30);
 
