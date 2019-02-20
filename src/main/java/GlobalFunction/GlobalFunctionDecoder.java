@@ -4,6 +4,7 @@ import Structures.F4;
 import Structures.F4Math;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class GlobalFunctionDecoder {
@@ -36,7 +37,7 @@ public class GlobalFunctionDecoder {
                     adjacencyMatrix[j][i] = 2;
                     F4Matrix[j][i] = F4.OMEGA;
                 }
-                else if(a.charAt(i) == '3'){// <------------------------- DANGER STRANGER
+                else if(a.charAt(i) == 'x'){// <------------------------- DANGER STRANGER
                     adjacencyMatrix[j][i] = 3;
                     F4Matrix[j][i] = F4.OMEGASQ;
                 }
@@ -83,6 +84,58 @@ public class GlobalFunctionDecoder {
 
     }
 
+    public GlobalFunctionDecoder(int[][] adjMat){
+
+        int size = adjMat.length;
+
+        F4[][] F4Matrix = new F4[size][size];
+
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                F4Matrix[i][j] = F4.fromIndex(adjMat[i][j]);
+            }
+        }
+
+        this.F4Matrix = F4Matrix;
+
+        codewords = new F4[(int) Math.pow(2, size)][size];
+        ArrayList<F4[]> codewordlist = new ArrayList<F4[]>();
+
+        F4[] zero = new F4[size];
+        F4[] wordOne = new F4[size];
+
+        for (int i = 0; i < size; i++) {
+            zero[i] = F4.ZERO;
+            wordOne[i] = F4Matrix[0][i];
+        }
+        codewordlist.add(zero);
+        codewordlist.add(wordOne);
+
+        for (int i = 1; i < size; i++) {
+            ArrayList<F4[]> newcodewords = new ArrayList<F4[]>();
+
+            for (F4[] vector: codewordlist) {
+                newcodewords.add(F4Math.add(vector,F4Matrix[i]));
+            }
+
+            codewordlist.addAll(newcodewords);
+        }
+
+        for (int i = 0; i < codewordlist.size(); i++) {
+            codewords[i] = codewordlist.get(i);
+        }
+
+        beliefs = new double[size][4];
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < 4; j++) {
+                beliefs[i][j] = 1;
+            }
+        }
+
+    }
+
 
 
     public void initConfidentZeroCodeword(){
@@ -118,6 +171,20 @@ public class GlobalFunctionDecoder {
             ret.add(str);
         }
         return ret;
+    }
+
+    public HashSet<String> codeWordsSet(){
+        HashSet<String> set = new HashSet<String>();
+
+        for (int i = 0; i < codewords.length; i++) {
+            String str = "";
+            for (int j = 0; j < codewords[0].length; j++) {
+                str += codewords[i][j];
+            }
+            set.add(str);
+        }
+        return set;
+
     }
 
     public int minEditDist(){

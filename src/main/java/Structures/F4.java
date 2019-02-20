@@ -80,6 +80,6 @@ public enum F4 {
             return "1";
         if(this == OMEGA)
             return "w";
-        return "w^2"; // <-------------------------- Danger
+        return "x"; // <-------------------------- Danger
     }
 }
