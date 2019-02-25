@@ -23,7 +23,7 @@ public class MethodComparator {
 
         for (int i = 1; i < levelsOfNoise; i++) {
 
-            double N_0 = i;
+            double N_0 = (double )i / 2;
 
             BeliefVector[][] softInformation = new BeliefVector[runs][codeword.length()];
 
@@ -43,6 +43,44 @@ public class MethodComparator {
             ArrayList<DataPoint> lcDatapoints = new ArrayList<DataPoint>();
             for (int j = 0; j < lcOperations.length; j++) {
                 lcDatapoints.add(collectLCPoint(noise,runs,lcFloodings,lcOperations[j],codeword,softInformation));
+                System.out.print(lcDatapoints.get(j).toString2());
+            }
+
+
+            System.out.println();
+
+
+        }
+    }
+
+    public void runFloodingComparison(int normalFloodings, int lcFloodings[], int lcOperations, int runs,  int levelsOfNoise, String codeword){
+
+        System.out.println();
+
+        double E_b = 10;
+
+        for (int i = 1; i < levelsOfNoise; i++) {
+
+            double N_0 = (double )i / 2;
+
+            BeliefVector[][] softInformation = new BeliefVector[runs][codeword.length()];
+
+            for (int j = 0; j < runs; j++) {
+                BeliefVector[] awgn = AWGN.awgnWord(codeword, E_b, N_0);
+
+                for (int k = 0; k < awgn.length; k++) {
+                    softInformation[j][k] = awgn[k];
+                }
+            }
+
+            double noise = Math.log10(E_b/N_0);
+
+            DataPoint noLC = collectFloodingPoint(noise,runs,normalFloodings,codeword,softInformation);
+            System.out.print(noLC.toString());
+
+            ArrayList<DataPoint> lcDatapoints = new ArrayList<DataPoint>();
+            for (int j = 0; j < lcFloodings.length; j++) {
+                lcDatapoints.add(collectLCPoint(noise,runs,lcFloodings[j],lcOperations,codeword,softInformation));
                 System.out.print(lcDatapoints.get(j).toString2());
             }
 
@@ -83,7 +121,7 @@ public class MethodComparator {
 
             long start = System.nanoTime();
 
-            nonLCDecoder.flood(50);
+            nonLCDecoder.flood(floodings);
 
             long end = System.nanoTime()  - start;
 
@@ -100,8 +138,8 @@ public class MethodComparator {
 
         }
 
-        double bitErrorRate = (double) bitErrors/ (double) bits;
-        double wordErrorRate = (double )wordErrors/ (double )words;
+        double bitErrorRate = Math.log10((double) bitErrors/ (double) bits);
+        double wordErrorRate = Math.log10((double )wordErrors/ (double )words);
         double avgtime = (double )time/ (double) runs / (double) 1000000000;
 
         return new DataPoint(noise,bitErrorRate,wordErrorRate,avgtime);
@@ -152,8 +190,8 @@ public class MethodComparator {
 
         }
 
-        double bitErrorRate = (double) bitErrors/ (double) bits;
-        double wordErrorRate = (double )wordErrors/ (double )words;
+        double bitErrorRate = Math.log10((double) bitErrors/ (double) bits);
+        double wordErrorRate = Math.log10((double) wordErrors/ (double) words);
         double avgtime = (double) time / (double) runs / (double) 1000000000;
 
         return new DataPoint(noise,bitErrorRate,wordErrorRate,avgtime);

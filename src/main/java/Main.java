@@ -454,7 +454,15 @@ public class Main {
 
             MethodComparator comparator = new MethodComparator(adjacencyMatrix);
 
-            comparator.runComparison(50,10,new int[]{30,50,100, 200},200,15,inputWord);
+            comparator.runComparison(300,10,new int[]{30,50,100, 200},200,15,inputWord);
+        }
+
+        if(option1.equals("floodingcomparison")){
+            String inputword = sc.nextLine();
+
+            MethodComparator comparator = new MethodComparator(adjacencyMatrix);
+
+            comparator.runFloodingComparison(50,new int[]{2,10}, 200,200,15,inputword);
         }
 
     }

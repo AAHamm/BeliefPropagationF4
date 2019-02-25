@@ -120,10 +120,9 @@ public class BeliefVector {
         if(belief[2] > belief[1] && belief[2] > belief[0] && belief[2] > belief[3]){
             return 2;
         }
-        if(belief[3] > belief[1] && belief[3] > belief[2] && belief[3] > belief[0]){
-            return 3;
-        }
-        return -1;
+
+        return 3;
+
     }
 
     public void normalize(){
