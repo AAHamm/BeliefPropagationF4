@@ -86,6 +86,7 @@ public class GlobalFunctionDecoder {
 
     public GlobalFunctionDecoder(int[][] adjMat){
 
+        this.adjacencyMatrix = adjMat;
         int size = adjMat.length;
 
         F4[][] F4Matrix = new F4[size][size];
@@ -144,6 +145,36 @@ public class GlobalFunctionDecoder {
             beliefs[i][1] = 0.05;
             beliefs[i][2] = 0.075;
             beliefs[i][3] = 0.175;
+        }
+    }
+
+    public void initConfidentWord(String word){
+        for (int i = 0; i < word.length(); i++) {
+            if(word.charAt(i) == '0'){
+                beliefs[i][0] = 0.7;
+                beliefs[i][1] = 0.1;
+                beliefs[i][2] = 0.1;
+                beliefs[i][3] = 0.1;
+            }
+            else if(word.charAt(i) == '1'){
+                beliefs[i][0] = 0.1;
+                beliefs[i][1] = 0.7;
+                beliefs[i][2] = 0.1;
+                beliefs[i][3] = 0.1;
+            }
+            else if(word.charAt(i) == 'w'){
+                beliefs[i][0] = 0.1;
+                beliefs[i][1] = 0.1;
+                beliefs[i][2] = 0.7;
+                beliefs[i][3] = 0.1;
+            }
+            else {
+                beliefs[i][0] = 0.1;
+                beliefs[i][1] = 0.1;
+                beliefs[i][2] = 0.1;
+                beliefs[i][3] = 0.7;
+            }
+
         }
     }
 

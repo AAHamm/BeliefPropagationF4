@@ -59,8 +59,7 @@ public class Main {
 
             String inputWord = sc.nextLine();
 
-            decoder.initErrorCodeword(inputWord,3);
-           // decoder.initConfidentZeroCodeWord();
+            decoder.initConfidentCodeWord(inputWord);
 
             decoder.flood(50);
 
@@ -69,10 +68,12 @@ public class Main {
         }
 
         if(option1.equals("global")){
-            GlobalFunctionDecoder g = new GlobalFunctionDecoder();
 
+            GlobalFunctionDecoder g = new GlobalFunctionDecoder(adjacencyMatrix);
+            String inputWord = sc.nextLine();
+
+            g.initConfidentWord(inputWord);
            // g.initConfidentZeroCodeword();
-
             System.out.println(g.codewords());
 
 
@@ -463,6 +464,14 @@ public class Main {
             MethodComparator comparator = new MethodComparator(adjacencyMatrix);
 
             comparator.runFloodingComparison(50,new int[]{2,10}, 200,200,15,inputword);
+        }
+
+        if(option1.equals("comparetwo")){
+            String inputword = sc.nextLine();
+
+            MethodComparator comparator = new MethodComparator(adjacencyMatrix);
+
+            comparator.runCompareTwoMethods(50,5,100, 2,250,200,21,inputword);
         }
 
     }

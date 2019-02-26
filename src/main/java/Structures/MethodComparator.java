@@ -91,6 +91,41 @@ public class MethodComparator {
         }
     }
 
+    public void runCompareTwoMethods(int normalFloodings, int floodings1, int lc1, int floodings2, int lc2, int runs, int levelsOfNoise, String codeword){
+
+        System.out.println();
+
+        double E_b = 10;
+
+        for (int i = 1; i < levelsOfNoise; i++) {
+
+            double N_0 = (double )i / 2;
+
+            BeliefVector[][] softInformation = new BeliefVector[runs][codeword.length()];
+
+            for (int j = 0; j < runs; j++) {
+                BeliefVector[] awgn = AWGN.awgnWord(codeword, E_b, N_0);
+
+                for (int k = 0; k < awgn.length; k++) {
+                    softInformation[j][k] = awgn[k];
+                }
+            }
+
+            double noise = Math.log10(E_b/N_0);
+
+            DataPoint noLC = collectFloodingPoint(noise,runs,normalFloodings,codeword,softInformation);
+            System.out.print(noLC.toString());
+
+            System.out.print(collectLCPoint(noise,runs,floodings1, lc1, codeword, softInformation).toString2());
+            System.out.print(collectLCPoint(noise,runs,floodings2,lc2,codeword,softInformation).toString2());
+
+            System.out.println();
+
+
+        }
+
+    }
+
 
     public DataPoint collectFloodingPoint(double noise, int runs, int floodings, String codeword, BeliefVector[][] softInformation){
 
@@ -184,10 +219,7 @@ public class MethodComparator {
             if (biterror > 0) {
                 bitErrors += biterror;
                 wordErrors++;
-
             }
-
-
         }
 
         double bitErrorRate = Math.log10((double) bitErrors/ (double) bits);
