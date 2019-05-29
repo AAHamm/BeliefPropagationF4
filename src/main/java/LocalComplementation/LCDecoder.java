@@ -92,7 +92,60 @@ public class LCDecoder {
             LC(i % nodes.size());
         }
 
+    }
 
+    public void SelectiveLCFlood(int iterationsPerGraph, int lcOperations){
+
+        flood(iterationsPerGraph);
+
+
+
+        for (int i = 0; i < lcOperations*2; i+=2) {
+
+            for (LCNode n: nodes) {
+                n.marginalsToBeliefs();
+            }
+
+            LC(i % nodes.size());
+            LC((i+1) % nodes.size());
+
+            flood(iterationsPerGraph);
+        }
+
+        for (LCNode n: nodes) {
+            n.marginalsToBeliefs();
+        }
+
+        for (int i = (lcOperations*2)-1; i > -1; i-=2) {
+            LC(i % nodes.size());
+            LC((i-1) % nodes.size());
+
+        }
+
+    }
+
+
+    public void pureLCflood(int iterationsPerGraph, int lcOperations){
+
+
+        for (int i = 0; i < lcOperations; i++) {
+
+            for (LCNode n: nodes) {
+                n.marginalsToBeliefs();
+            }
+
+            LC(i % nodes.size());
+
+            flood(iterationsPerGraph);
+        }
+
+        for (LCNode n: nodes) {
+            n.marginalsToBeliefs();
+        }
+
+        for (int i = lcOperations-1; i > -1; i--) {
+            LC(i % nodes.size());
+        }
 
     }
 

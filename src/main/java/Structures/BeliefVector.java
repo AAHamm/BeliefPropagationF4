@@ -141,4 +141,81 @@ public class BeliefVector {
     public BeliefVector copy(){
         return new BeliefVector(belief[0], belief[1], belief[2], belief[3]);
     }
+
+    public static void main(String[] args) {
+
+        BeliefVector x0 = new BeliefVector(0.05, 0.7, 0.1, 0.15);
+        BeliefVector x1 = new BeliefVector(0.05, 0.1, 0.7, 0.15);
+        BeliefVector x2 = new BeliefVector(0.25, 0.25, 0.25, 0.25);
+
+
+        BeliefVector mx0 = new BeliefVector(0.05, 0.1, 0.7, 0.15);
+        BeliefVector mx1 = new BeliefVector(0.05, 0.7, 0.1, 0.15);
+        BeliefVector mx2 = new BeliefVector(0.25, 0.25, 0.25, 0.25);
+
+
+        BeliefVector mx0tox1 = dSS(x0,mx2);
+        BeliefVector mx1tox0 = dSS(x1, mx2);
+
+        BeliefVector mx0tox2 = dSS(x0,mx1);
+        BeliefVector mx2tox0 = dSS(x2,mx1);
+
+        BeliefVector mx1tox2 = dSS(x1,mx0);
+        BeliefVector mx2tox1 = dSS(x2,mx0);
+
+        /*
+        System.out.println(mx0tox1);
+        System.out.println(mx1tox0);
+
+        System.out.println(mx0tox2);
+        System.out.println(mx2tox0);
+
+        System.out.println(mx1tox2);
+        System.out.println(mx2tox1);
+        */
+
+        BeliefVector x0Marginal = dot(x0,dSX(mx2tox0,mx1tox0));
+        BeliefVector x1Marginal = dot(x1,dSX(mx2tox1, mx0tox1));
+        BeliefVector x2Marginal = dot(x2, dSX(mx1tox2, mx0tox2));
+
+        x0Marginal.normalize();
+        x1Marginal.normalize();
+        x2Marginal.normalize();
+
+        /*
+        System.out.println(x0Marginal);
+        System.out.println(x1Marginal);
+        System.out.println(x2Marginal);
+        */
+
+        BeliefVector lcx0 = new BeliefVector(0.03,0.16,0.05,0.76);
+        BeliefVector lcx1 = new BeliefVector(0.04, 0.16, 0.25, 0.55);
+        BeliefVector lcx2 = new BeliefVector(0.08, 0.85, 0.05, 0.2);
+
+
+        BeliefVector lcmx0 = new BeliefVector(0.03, 0.05, 0.16, 0.76);
+        BeliefVector lcmx1 = new BeliefVector(0.04, 0.25, 0.16, 0.55);
+        BeliefVector lcmx2 = new BeliefVector(0.08, 0.05, 0.85, 0.2);
+
+        BeliefVector lcmx0tox1 = dSS(lcx0,lcmx2);
+        BeliefVector lcmx0tox2 = dSS(lcx0,lcmx1);
+
+        /*
+        System.out.println(lcmx0tox1);
+        System.out.println(lcmx0tox2);
+        */
+
+        BeliefVector lcx0Marginal = dot(lcx0,dSX(lcmx1, lcmx2));
+        BeliefVector lcx1Marginal = dot(lcx1, lcmx0tox1);
+        BeliefVector lcx2Marginal = dot(lcx2, lcmx0tox2);
+
+        lcx0Marginal.normalize();
+        lcx1Marginal.normalize();
+        lcx2Marginal.normalize();
+
+        System.out.println(lcx0Marginal);
+        System.out.println(lcx1Marginal);
+        System.out.println(lcx2Marginal);
+
+    }
 }

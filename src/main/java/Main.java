@@ -59,7 +59,13 @@ public class Main {
 
             String inputWord = sc.nextLine();
 
-            decoder.initConfidentCodeWord(inputWord);
+            decoder.setBeliefs(new BeliefVector[]{
+                    new BeliefVector(0.133,0.133,0.6,0.133),
+                    new BeliefVector(0.133,0.133,0.133,0.6),
+                    new BeliefVector(0.6,0.133,0.133,0.133),
+                    new BeliefVector(0.6,0.133,0.133,0.133),
+                    new BeliefVector(0.133,0.6,0.133,0.133),
+            });
 
             decoder.flood(50);
 
@@ -72,24 +78,34 @@ public class Main {
             GlobalFunctionDecoder g = new GlobalFunctionDecoder(adjacencyMatrix);
             String inputWord = sc.nextLine();
 
-            g.initConfidentWord(inputWord);
-           // g.initConfidentZeroCodeword();
-            System.out.println(g.codewords());
+            g.setBeliefs(new BeliefVector[]{
+                    new BeliefVector(0.133,0.133,0.6,0.133),
+                    new BeliefVector(0.133,0.133,0.133,0.6),
+                    new BeliefVector(0.6,0.133,0.133,0.133),
+                    new BeliefVector(0.6,0.133,0.133,0.133),
+                    new BeliefVector(0.133,0.6,0.133,0.133),
+            });
 
+            //g.initConfidentZeroCodeword();
+            //System.out.println(g.codewords());
+
+            //System.out.println(g.minEditDist());
 
             double[] c = g.globalMarginals();
 
             double[][] variables = g.variableMarginals();
 
+            /*
             for (double aC : c) {
                 System.out.println(aC);
             }
+            */
 
             System.out.println();
             for (int i = 0; i < variables.length; i++) {
                 System.out.print("x" + i + ": " + "(");
                 for (int j = 0; j < variables[0].length; j++) {
-                    System.out.print(variables[i][j] +", ");
+                    System.out.print(variables[i][j] +" \\\\ ");
                 }
                 System.out.print(")");
                 System.out.println();
@@ -161,17 +177,38 @@ public class Main {
 
         if(option1.equals("lcc")){
             String inputWord = sc.nextLine();
-            int lcNode = Integer.parseInt(sc.nextLine());
+            //int lcNode = Integer.parseInt(sc.nextLine());
 
             LCDecoder decoder= new LCDecoder(adjacencyMatrix);
 
 
+            /*
+            decoder.setBeliefs(new BeliefVector[]{
+                    new BeliefVector(0.25,0.25,0.25,0.25),
+                    new BeliefVector(0.2,0.5,0.2,0.1),
+                    new BeliefVector(0.2,0.5,0.2,0.1),
+                    new BeliefVector(0.25,0.25,0.25,0.25),
+                    new BeliefVector(0.5,0.2,0.2,0.1),
+                    new BeliefVector(0.7,0.05,0.1,0.15)
+            });
+            */
+
             decoder.initConfidentCodeWord(inputWord);
 
-            decoder.LC(lcNode);
-            decoder.flood(50);
+            decoder.RoundLCflood(10,200);
 
-            System.out.println(decoder.StringMarginals(lcNode));
+            ArrayList<BeliefVector> marg = decoder.marginals();
+
+            System.out.println();
+            for (int i = 0; i < marg.size(); i++) {
+                System.out.print("x" + i + "(");
+                for (int j = 0; j < 4; j++) {
+                    System.out.print(marg.get(i).get(j) + ", ");
+                }
+                System.out.print(")");
+                System.out.println();
+            }
+
             /*
             String out = "";
             for (int i = 0; i < m.size(); i++) {
@@ -194,11 +231,11 @@ public class Main {
             System.out.println(out);
             */
 
-            System.out.println(decoder.printNeighbourHood());
+            //System.out.println(decoder.printNeighbourHood());
 
-            System.out.print(decoder.printAdjMat());
+            //System.out.print(decoder.printAdjMat());
 
-            System.out.println(decoder.printMessages(0));
+            //System.out.println(decoder.printMessages(0));
         }
 
         if(option1.equals("lccerr")){
@@ -455,7 +492,7 @@ public class Main {
 
             MethodComparator comparator = new MethodComparator(adjacencyMatrix);
 
-            comparator.runComparison(300,10,new int[]{30,50,100, 200},200,15,inputWord);
+            comparator.runComparison(50,10,new int[]{50,100,150,200},500,30, inputWord);
         }
 
         if(option1.equals("floodingcomparison")){
@@ -463,7 +500,7 @@ public class Main {
 
             MethodComparator comparator = new MethodComparator(adjacencyMatrix);
 
-            comparator.runFloodingComparison(50,new int[]{2,10}, 200,200,15,inputword);
+            comparator.runFloodingComparison(50,new int[]{1,2,4,8,16}, 50,2000,30,inputword);
         }
 
         if(option1.equals("comparetwo")){
@@ -471,7 +508,38 @@ public class Main {
 
             MethodComparator comparator = new MethodComparator(adjacencyMatrix);
 
-            comparator.runCompareTwoMethods(50,5,100, 2,250,200,21,inputword);
+            comparator.runCompareTwoMethods(50,2,500, 4,250,200,21,inputword);
+        }
+
+        if(option1.equals("oneLC")){
+            String inputword = sc.nextLine();
+
+            MethodComparator comparator = new MethodComparator(adjacencyMatrix);
+
+            comparator.runCompareOneLC(50,50,2000, 30,inputword);
+        }
+
+        if (option1.equals("selectiveLC")){
+            String inputword = sc.nextLine();
+
+            MethodComparator comparator = new MethodComparator(adjacencyMatrix);
+
+            comparator.runCompareSelectiveLC(50,4, new int[]{100},2000,30,inputword);
+        }
+
+        if(option1.equals("generalDecoder")){
+            String inputword = sc.nextLine();
+
+            MethodComparator comparator = new MethodComparator(adjacencyMatrix);
+
+            comparator.runCompareGeneralDecoder(new int[]{1,5,10,20,30,40,50,60,70},8000,30,inputword);
+
+        }
+
+        if(option1.equals("globalcompare")){
+            String inputword = sc.nextLine();
+
+            MethodComparator comparator = new MethodComparator(adjacencyMatrix);
         }
 
     }

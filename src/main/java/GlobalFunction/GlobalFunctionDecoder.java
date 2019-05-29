@@ -1,5 +1,6 @@
 package GlobalFunction;
 
+import Structures.BeliefVector;
 import Structures.F4;
 import Structures.F4Math;
 
@@ -137,6 +138,13 @@ public class GlobalFunctionDecoder {
 
     }
 
+    public void setBeliefs(BeliefVector[] vector){
+        for (int i = 0; i < beliefs.length; i++) {
+            for (int j = 0; j < 4; j++) {
+                beliefs[i][j] = vector[i].get(j);
+            }
+        }
+    }
 
 
     public void initConfidentZeroCodeword(){
@@ -153,25 +161,25 @@ public class GlobalFunctionDecoder {
             if(word.charAt(i) == '0'){
                 beliefs[i][0] = 0.7;
                 beliefs[i][1] = 0.1;
-                beliefs[i][2] = 0.1;
-                beliefs[i][3] = 0.1;
+                beliefs[i][2] = 0.075;
+                beliefs[i][3] = 0.125;
             }
             else if(word.charAt(i) == '1'){
                 beliefs[i][0] = 0.1;
                 beliefs[i][1] = 0.7;
-                beliefs[i][2] = 0.1;
-                beliefs[i][3] = 0.1;
+                beliefs[i][2] = 0.075;
+                beliefs[i][3] = 0.125;
             }
             else if(word.charAt(i) == 'w'){
                 beliefs[i][0] = 0.1;
-                beliefs[i][1] = 0.1;
+                beliefs[i][1] = 0.075;
                 beliefs[i][2] = 0.7;
-                beliefs[i][3] = 0.1;
+                beliefs[i][3] = 0.125;
             }
             else {
                 beliefs[i][0] = 0.1;
-                beliefs[i][1] = 0.1;
-                beliefs[i][2] = 0.1;
+                beliefs[i][1] = 0.075;
+                beliefs[i][2] = 0.125;
                 beliefs[i][3] = 0.7;
             }
 

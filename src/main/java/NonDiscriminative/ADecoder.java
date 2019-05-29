@@ -152,16 +152,16 @@ public class ADecoder {
     public void initConfidentCodeWord(String word){
         for (int i = 0; i < word.length(); i++) {
             if(word.charAt(i) == '0'){
-                nodes.get(i).setBeliefs(new BeliefVector(0.7, 0.1, 0.1, 0.1));
+                nodes.get(i).setBeliefs(new BeliefVector(0.7, 0.1, 0.075, 0.125));
             }
             else if(word.charAt(i) == '1'){
-                nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.7, 0.1, 0.1));
+                nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.7, 0.075, 0.125));
             }
             else if(word.charAt(i) == 'w'){
-                nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.7, 0.1));
+                nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.075, 0.7, 0.125));
             }
             else  if(word.charAt(i) == 'x'){
-                nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.1, 0.1, 0.7));
+                nodes.get(i).setBeliefs(new BeliefVector(0.1, 0.075, 0.125, 0.7));
             }
         }
     }
@@ -292,7 +292,7 @@ public class ADecoder {
 
         String out = "";
         for (int i = 0; i < m.size(); i++) {
-            out+= "x" + i + ": (" + m.get(i).get(0) + ", " + m.get(i).get(1) + ", " + m.get(i).get(2) + ", " + m.get(i).get(3) + ")";
+            out+= "x" + i + ": (" + m.get(i).get(0) + " \\\\" + m.get(i).get(1) + " \\\\ " + m.get(i).get(2) + "\\\\ " + m.get(i).get(3) + ")";
             if(m.get(i).greatestValue() == 0){
                 out+= ", decoded to: 0";
             }
